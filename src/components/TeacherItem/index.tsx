@@ -1,38 +1,61 @@
 import React from 'react';
 
 import whatsappIcon from '../../assets/images/icons/whatsapp.svg';
+import api from '../../services/api';
 import './styles.css';
 
-const TeacherItem: React.FC = () => {
+
+
+export interface Teacher {
+    id: number;
+    avatar: string;
+    bio: string;
+    cost: number;
+    name: string;
+    subject: string;
+    whatsapp: string;
+}
+interface TeacherItemProps {
+    teacher: Teacher;
+}
+
+const TeacherItem: React.FC<TeacherItemProps> = ({ teacher }) => {
+    
+    function createNewConnection() {
+        api.post('connections', {
+            user_id: teacher.id
+        })
+    }
+
     return (
         <article className="teacher-item">
             <header>
-                <img src="https://avatars0.githubusercontent.com/u/32581187?s=460&u=cbcc47029730ef29677f8da0f5231920dd330766&v=4" alt="profile" />
+                <img src={teacher.avatar} alt={teacher.name} />
                 <div>
                     <strong>
-                        Michel Maia
+                        {teacher.name}
                             </strong>
                     <span>
-                        Gastronomy
-                            </span>
+                        {teacher.subject}
+                    </span>
                 </div>
             </header>
 
             <p>
-                Bacon ipsum dolor amet hamburger rump porchetta sausage.
-                        <br /> <br />
-                        Leberkas ham hock meatball tongue filet mignon. Hamburger rump ham hock alcatra. Jerky prosciutto alcatra spare ribs frankfurter. Burgdoggen alcatra bacon capicola chislic. Ribeye jerky sirloin, tongue spare ribs pork belly porchetta tail pork meatloaf cow.
-                    </p>
+                {teacher.bio}    
+            </p>
 
             <footer>
                 <p>
                     Price per Hour
-                            <strong>$ 40.00</strong>
+                    <strong>$ {teacher.cost}</strong>
                 </p>
-                <button type="button">
+                <a 
+                    target="_blank"
+                    onClick={createNewConnection} href={`https://wa.me/${teacher.whatsapp}?text=I'm%20looking%20for%20${teacher.subject}%20classes`}>
                     <img src={whatsappIcon} alt="Whatsapp" />
                             Contact
-                        </button>
+                </a>
             </footer>
         </article>
     );
